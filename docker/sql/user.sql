@@ -1,4 +1,7 @@
-CREATE TABLE "users" (
+
+CREATE DATABASE "DeliveryProject";
+
+CREATE TABLE "users" ( 
     "user_id" INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     "name" VARCHAR NOT NULL,
     "email" VARCHAR UNIQUE NOT NULL,
