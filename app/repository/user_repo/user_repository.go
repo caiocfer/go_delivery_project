@@ -16,6 +16,18 @@ func NewUserRepo(db *sql.DB) UserRepository {
 	return &Users{db}
 }
 
+func (repository *Users) EmailExists(email string) (bool, error) {
+	var exists bool
+	query := `SELECT EXISTS(SELECT 1 FROM users WHERE email = $1)`
+
+	err := repository.db.QueryRow(query, email).Scan(&exists)
+	if err != nil {
+		return false, fmt.Errorf("failed to check email existence: %w", err)
+	}
+
+	return exists, nil
+}
+
 func (repository *Users) CreateUser(user models.User) error {
 	query := `
 					INSERT INTO users (name, email, password_hash, phone)
@@ -34,7 +46,7 @@ func (repository *Users) CreateUser(user models.User) error {
 		return fmt.Errorf("failed to insert user into database: %w", err)
 	}
 
-	log.Printf("User '%s' created successfully with ID: %s", user.Name)
+	log.Printf("User '%s' created successfully", user.Name)
 
 	return nil
 }

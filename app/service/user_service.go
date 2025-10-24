@@ -18,11 +18,17 @@ func NewUserService(repo userrepo.UserRepository) *UserService {
 }
 
 func (s *UserService) CreateUser(req models.UserCreationRequest) error {
-	// TODO Verify if email already exists
+	exists, err := s.userRepo.EmailExists(req.Email)
+	if err != nil {
+		return fmt.Errorf("failed to check email existence: %w", err)
+	}
+	if exists {
+		return errors.New("email already exists")
+	}
 
 	hashedPassword, err := security.HashPassword(req.Password)
 	if err != nil {
-		errors.New("error hashing password")
+		return errors.New("error hashing password")
 	}
 
 	userToCreate := models.User{
