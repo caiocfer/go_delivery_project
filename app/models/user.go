@@ -57,3 +57,8 @@ func (user *UserCreationRequest) formatField() {
 	user.Email = strings.TrimSpace(user.Email)
 	user.Phone = strings.TrimSpace(user.Phone)
 }
+
+type LoginRequest struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=6"`
+}

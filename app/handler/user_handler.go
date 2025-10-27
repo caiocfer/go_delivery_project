@@ -52,3 +52,20 @@ func (h *UserHandler) CreateUserHandler(c *gin.Context) {
 		"message": "User created successfully",
 	})
 }
+
+func (h *UserHandler) LoginHandler(c *gin.Context) {
+	var req models.LoginRequest
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": fmt.Sprintf("Invalid request payload: %v", err.Error())})
+		return
+	}
+
+	token, err := h.userService.Login(req)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"token": token})
+}

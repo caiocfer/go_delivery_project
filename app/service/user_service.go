@@ -45,3 +45,21 @@ func (s *UserService) CreateUser(req models.UserCreationRequest) error {
 
 	return nil
 }
+
+func (s *UserService) Login(req models.LoginRequest) (string, error) {
+	user, err := s.userRepo.FindByEmail(req.Email)
+	if err != nil {
+		return "", fmt.Errorf("user not found")
+	}
+
+	if err := security.VerifyPassword(user.Password, req.Password); err != nil {
+		return "", fmt.Errorf("invalid credentials")
+	}
+
+	token, err := security.GenerateJWT(user.Id)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate token")
+	}
+
+	return token, nil
+}

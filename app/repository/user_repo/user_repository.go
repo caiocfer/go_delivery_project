@@ -50,3 +50,19 @@ func (repository *Users) CreateUser(user models.User) error {
 
 	return nil
 }
+
+func (repository *Users) FindByEmail(email string) (*models.User, error) {
+	user := &models.User{}
+	query := `SELECT user_id, name, email, password_hash FROM users WHERE email = $1`
+
+	row := repository.db.QueryRow(query, email)
+	err := row.Scan(&user.Id, &user.Name, &user.Email, &user.Password)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("user not found")
+		}
+		return nil, fmt.Errorf("failed to find user by email: %w", err)
+	}
+
+	return user, nil
+}

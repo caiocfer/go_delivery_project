@@ -19,4 +19,5 @@ func setupRoutes(router *gin.Engine, userHandler *handler.UserHandler) {
 	})
 
 	router.POST("/createuser", userHandler.CreateUserHandler)
+	router.POST("/login", userHandler.LoginHandler)
 }
