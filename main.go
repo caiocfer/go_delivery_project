@@ -6,6 +6,7 @@ import (
 	"github.com/caiocfer/go_delivery_project/app/api"
 	"github.com/caiocfer/go_delivery_project/app/db"
 	"github.com/caiocfer/go_delivery_project/app/handler"
+	restaurantrepo "github.com/caiocfer/go_delivery_project/app/repository/restaurant_repo"
 	userrepo "github.com/caiocfer/go_delivery_project/app/repository/user_repo"
 	"github.com/caiocfer/go_delivery_project/app/service"
 )
@@ -21,5 +22,9 @@ func main() {
 	userService := service.NewUserService(userRepository)
 	userHandler := handler.NewUserHandler(userService)
 
-	api.SetupGin(userHandler)
+	restaurantRepository := restaurantrepo.NewRestaurantRepository(dbConn)
+	restaurantService := service.NewRestaurantService(restaurantRepository)
+	restaurantHandler := handler.NewRestaurantHandler(restaurantService)
+
+	api.SetupGin(userHandler, restaurantHandler)
 }
