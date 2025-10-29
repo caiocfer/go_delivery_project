@@ -20,6 +20,7 @@ func setupRoutes(router *gin.Engine, userHandler *handler.UserHandler, restauran
 
 	router.POST("/createuser", userHandler.CreateUserHandler)
 	router.POST("/login", userHandler.LoginHandler)
+	router.GET("/getuser", userHandler.GetUserHandler)
 
 	router.POST("/createrestaurant", restaurantHandler.CreateRestaurantHandler)
 	router.POST("/loginrestaurant", restaurantHandler.LoginHandler)

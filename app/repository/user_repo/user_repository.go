@@ -66,3 +66,19 @@ func (repository *Users) FindByEmail(email string) (*models.User, error) {
 
 	return user, nil
 }
+
+func (repository *Users) FindByID(id uint64) (*models.User, error) {
+	user := &models.User{}
+	query := `SELECT user_id, name, email, phone FROM users WHERE user_id = $1`
+
+	row := repository.db.QueryRow(query, id)
+	err := row.Scan(&user.Id, &user.Name, &user.Email, &user.Phone)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("user not found")
+		}
+		return nil, fmt.Errorf("failed to find user by id: %w", err)
+	}
+
+	return user, nil
+}

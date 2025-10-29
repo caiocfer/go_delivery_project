@@ -63,3 +63,17 @@ func (s *UserService) Login(req models.LoginRequest) (string, error) {
 
 	return token, nil
 }
+
+func (s *UserService) GetUserFromToken(tokenStr string) (*models.User, error) {
+	claims, err := security.ValidateJWT(tokenStr)
+	if err != nil {
+		return nil, fmt.Errorf("invalid token: %w", err)
+	}
+
+	user, err := s.userRepo.FindByID(claims.UserID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to find user: %w", err)
+	}
+
+	return user, nil
+}
